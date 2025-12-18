@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">📚 Biblioteca Digital</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Inicio</a>
+                <a class="nav-link" href="/libros">Catálogo</a>
+                <a class="nav-link" href="/agregar">Agregar Libro</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-section text-center text-white py-5">
+        <div class="container">
+            <h1 class="display-4">Bienvenido a la Biblioteca Digital</h1>
+            <p class="lead">Tu portal de conocimiento en la nube</p>
+            <p class="fs-4">📖 Total de libros: <strong><%= totalLibros %></strong></p>
+            <a href="/libros" class="btn btn-light btn-lg mt-3">Ver Catálogo</a>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="card h-100 shadow">
+                    <div class="card-body">
+                        <h1>📖</h1>
+                        <h5 class="card-title">Explora</h5>
+                        <p class="card-text">Descubre nuestra colección de libros</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow">
+                    <div class="card-body">
+                        <h1>➕</h1>
+                        <h5 class="card-title">Contribuye</h5>
+                        <p class="card-text">Agrega nuevos libros a la colección</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow">
+                    <div class="card-body">
+                        <h1>☁️</h1>
+                        <h5 class="card-title">En la Nube</h5>
+                        <p class="card-text">Accede desde cualquier lugar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">Biblioteca Digital © 2025 - Proyecto Cloud PaaS</p>
+    </footer>
+</body>
+</html>
