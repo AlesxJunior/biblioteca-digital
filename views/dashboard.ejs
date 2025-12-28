@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Biblioteca Digital</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">📚 Biblioteca Digital</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">Inicio</a>
+                <a class="nav-link" href="/libros">Catálogo</a>
+                <a class="nav-link" href="/agregar">Agregar Libro</a>
+                <a class="nav-link active" href="/dashboard">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h2 class="mb-4">📊 Dashboard de Análisis</h2>
+        
+        <!-- Tarjetas de resumen -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body text-center">
+                        <h1><%= totalLibros %></h1>
+                        <p class="mb-0">Total de Libros</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <h1><%= librosPorGenero.length %></h1>
+                        <p class="mb-0">Géneros</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <h1><%= libroAntiguo ? libroAntiguo.anio : 'N/A' %></h1>
+                        <p class="mb-0">Libro Más Antiguo</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body text-center">
+                        <h1><%= libroReciente ? libroReciente.anio : 'N/A' %></h1>
+                        <p class="mb-0">Libro Más Reciente</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">📈 Libros por Género</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="generoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">📅 Libros por Década</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="decadaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tablas de datos -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">🏆 Top Autores</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Autor</th>
+                                    <th>Libros</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% autoresTop.forEach(autor => { %>
+                                <tr>
+                                    <td><%= autor.autor %></td>
+                                    <td><span class="badge bg-primary"><%= autor.cantidad %></span></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">📊 Distribución por Género</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Género</th>
+                                    <th>Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% librosPorGenero.forEach(g => { %>
+                                <tr>
+                                    <td><%= g.genero %></td>
+                                    <td><span class="badge bg-success"><%= g.cantidad %></span></td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">Biblioteca Digital © 2025 - Dashboard de Análisis</p>
+    </footer>
+
+    <script>
+        // Gráfico de géneros
+        const generoCtx = document.getElementById('generoChart').getContext('2d');
+        new Chart(generoCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [<%= librosPorGenero.map(g => `'${g.genero}'`).join(',') %>],
+                datasets: [{
+                    data: [<%= librosPorGenero.map(g => g.cantidad).join(',') %>],
+                    backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545', '#0dcaf0', '#6f42c1']
+                }]
+            }
+        });
+
+        // Gráfico de décadas
+        const decadaCtx = document.getElementById('decadaChart').getContext('2d');
+        new Chart(decadaCtx, {
+            type: 'bar',
+            data: {
+                labels: [<%= librosPorDecada.map(d => `'${d.decada}s'`).join(',') %>],
+                datasets: [{
+                    label: 'Libros',
+                    data: [<%= librosPorDecada.map(d => d.cantidad).join(',') %>],
+                    backgroundColor: '#0d6efd'
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
